@@ -1,0 +1,72 @@
+#include <iostream>
+#include <string>
+#include <map>
+
+using namespace std;
+
+int main(){
+	//利用map容器建立映射规则
+	map<char,char> rules;
+	rules.insert(make_pair('A','T'));
+	rules.insert(make_pair('T','A'));
+	rules.insert(make_pair('G','C'));
+	rules.insert(make_pair('C','G'));
+
+	int count_number = 0;
+	int case_number;
+	cin>>case_number;
+
+	while(case_number>0){
+		int dna_number;
+		cin>>dna_number;
+		//动态设置数组大小
+		string* dna_string = new string[dna_number];
+		int* insist_array = new int[dna_number];
+
+		for(int i = 0; i < dna_number; i++){
+			cin>>dna_string[i];
+			insist_array[i] = 0;
+		}
+		for(int i = 0; i < dna_number; i++){
+			int length = dna_string[i].length();
+			if(insist_array[i] == 0){
+				for(int j = i+1; j < dna_number; j++)
+				{
+					if(insist_array[j] == 0){
+						//对比长度
+						if(length == dna_string[j].length()){
+							//逐个字符对比
+							int k = 0;
+							//正向匹配
+							while(rules[dna_string[i][k]] == dna_string[j][k] && k < length)
+								k++;
+							if(k == length){
+								count_number++;
+								insist_array[i] = 1;
+								insist_array[j] = 1;
+								break;
+							}
+							//反向匹配
+							k = 0;
+							int k2 = length-1;
+							while(k2 >= 0  && rules[dna_string[i][k]] == dna_string[j][k2]){
+								k++;
+								k2--;
+							}
+							if(k == length){
+								count_number++;
+								insist_array[i] = 1;
+								insist_array[j] = 1;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		case_number--;
+		cout<<count_number<<endl;
+		count_number = 0;
+	}
+	return 0;
+}
