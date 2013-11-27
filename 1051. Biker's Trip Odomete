@@ -1,0 +1,20 @@
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+
+int main(){
+    double diameter_inches;
+    int revolution;
+    double time_seconds;
+    
+    int count = 1;
+    while((cin>>diameter_inches>>revolution>>time_seconds) && revolution != 0){
+       double distance = diameter_inches/12/5280*3.1415927*revolution;
+       double MPH = distance*3600/time_seconds;
+       cout<<"Trip #"<<count<<": ";
+       printf("%.2lf %.2lf\n",distance,MPH);
+       count++;
+    }    
+    return 0;
+}
