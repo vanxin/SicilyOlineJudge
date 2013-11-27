@@ -1,0 +1,90 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct answer{
+       int start;
+       int end;
+       double avarage;
+};
+
+/*
+int compare(const void* a, const void* b){
+    int num_quarters_a = (*(answer*)a).end - (*(answer*)a).start;
+    int num_quarters_b = (*(answer*)b).end - (*(answer*)b).start;
+    if((*(answer*)a).avarage < (*(answer*)b).avarage)
+         return 1;
+    else if((*(answer*)a).avarage > (*(answer*)b).avarage)
+         return -1;
+    else{
+         if(num_quarters_a < num_quarters_b)
+              return 1;
+         else if(num_quarters_a > num_quarters_b)
+              return -1;
+         else if((*(answer*)a).end > (*(answer*)b).end)
+             return 1;
+         return -1;
+    }
+}
+*/
+bool compare(answer a, answer b){
+     int num_quarters_a = a.end - a.start;
+     int num_quarters_b = b.end - b.start;
+     if(a.avarage > b.avarage)
+          return true;
+     else if(a.avarage < b.avarage)
+          return false;
+     else{
+          if(num_quarters_a > num_quarters_b)
+              return true;
+          else if(num_quarters_a > num_quarters_b)
+              return false;
+          else if(a.end < b.end)
+             return true;
+          return false;      
+     }
+}
+
+int main(){
+    int case_number;
+    cin>>case_number;
+    int runs = 1;
+    while(runs <= case_number){
+         int quarters;
+         int best_periods;
+         int min_num_quarters;
+         cin>>quarters>>best_periods>>min_num_quarters;
+         int* quarters_detail = new int[quarters];
+         answer answer_hold[100000]; 
+         
+         //int n = (quarters+2-min_num_quarters)*((quarters-min_num_quarters+1)/2);
+         for(int i = 0; i < quarters; i++){
+                 cin>>quarters_detail[i];
+         }
+         
+         int hold_count = 0;
+         for(int k = min_num_quarters; k <= quarters; k++){
+             for(int i = 0; i <= quarters-k; i++){
+                     int sum = 0;
+                     for(int j = i; j < k+i; j++){
+                             sum += quarters_detail[j];
+                     }
+                     answer_hold[hold_count].start = i+1;
+                     answer_hold[hold_count].end = i+k;
+                     answer_hold[hold_count].avarage = (double)sum/k;
+                     hold_count++;
+             }
+         }
+         
+         sort(answer_hold,answer_hold+hold_count,compare);
+         
+         cout<<"Result for run "<<runs<<":"<<endl;
+         
+         for(int i = 0; i < best_periods && i < hold_count; i++){
+                 cout<<answer_hold[i].start<<"-"<<answer_hold[i].end<<endl;
+         }
+         runs++;
+    }
+    return 0;    
+}                                 
