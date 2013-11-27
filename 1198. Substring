@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+void quicksort(string* A, int start, int end);
+
+int partition(string* A, int start, int end);
+
+int main(){
+	int test_case;
+	cin>>test_case;
+
+	while(test_case--){
+		int n;
+		cin>>n;
+		string* substring_set = new string[n];
+		for(int i = 0; i < n; i++){
+			cin>>substring_set[i];
+		}
+		quicksort(substring_set, 0, n-1);
+
+		for(int i = 0; i < n; i++){
+			cout<<substring_set[i]; 
+		}
+		cout<<endl;
+	}
+	return 0;
+}
+
+void quicksort(string* A, int start, int end){
+	if(start < end){
+		int q = partition(A, start, end);
+		quicksort(A, start, q-1);
+		quicksort(A, q+1, end);
+	}
+
+}
+
+int partition(string* A, int start, int end){
+	string x = A[end];
+	int i = start - 1;
+	for(int j = start; j < end; j++){
+		string a,b;
+		a = A[j] + x;
+		b = x + A[j];
+		if(a <= b){
+			i += 1;
+			string temp = A[i];
+			A[i] = A[j];
+			A[j] = temp;
+		}
+	}
+	string temp = A[i+1];
+	A[i+1] = A[end];
+	A[end] = temp;
+	return i+1;
+}
