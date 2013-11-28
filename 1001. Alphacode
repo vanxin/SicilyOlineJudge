@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+
+int main(){
+    std::string digits;
+    int pre_solutions;
+    int pre_pre_solutions;
+    int current_solutions;
+    int length;
+    while(std::cin>>digits&&digits!="0"){
+        pre_solutions = 1;
+        current_solutions=1;
+        length = digits.length();
+        //初始状态
+        if(length>1){
+            int temp=(digits[0]-'0')*10+digits[1]-'0';
+            if(temp>=11&&temp<=19||temp>=21&&temp<=26){
+                current_solutions=2;
+            }
+        }
+        //循环遍历
+        for(int i=2; i < length; i++){
+            int hold_current = current_solutions;
+            int temp=(digits[i-1]-'0')*10+digits[i]-'0';
+            if(temp>=11&&temp<=19||temp>=21&&temp<=26)
+                current_solutions+=pre_solutions;
+            else if(temp == 10 || temp == 20)
+                current_solutions=pre_solutions;
+            else;
+            pre_solutions = hold_current;    
+        }
+        std::cout<<current_solutions<<std::endl;
+    }
+    return 0;
+}                                 
