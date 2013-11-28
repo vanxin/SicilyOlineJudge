@@ -1,0 +1,90 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <cstring>
+#include <algorithm>
+int visit[65];
+std::vector<int> path;
+int step;
+
+struct next_loc_follow{
+    int next_loc;
+    int follow;
+    next_loc_follow(int next){
+        next_loc=next;
+        follow=0;
+    }
+};
+
+bool If_Valid(int next_r,int next_c){
+    int location=(next_r-1)*8+next_c;
+    if(visit[location]==1)
+        return false;
+    return (next_r>=1&&next_r<=8&&next_c>=1&&next_c<=8);
+}
+bool sort_logic(next_loc_follow a, next_loc_follow b){
+    return (a.follow<b.follow);
+}
+
+void Travaling(int current_location){
+    if(step == 64){
+        int i = 63;
+        for(i=0; i < 63; i++)
+            std::cout<<path[i]<<" ";
+        std::cout<<path[63]<<std::endl;
+        path.clear();
+        return;
+    }
+    else{
+        int next[][2] = {{-1,-2},{1,-2},{2,-1},{2,1},{1,2},{-1,2},{-2,1},{-2,-1}} ;
+        int next_location;
+        std::vector<next_loc_follow> next_loc; 
+        for(int i = 0; i <8; i++){
+            int next_r=(current_location-1)/8+1+next[i][0];
+            int next_c=(current_location-1)%8+1+next[i][1];
+            if(If_Valid(next_r,next_c)){
+                next_location=(next_r-1)*8+next_c;
+                next_loc.push_back(next_loc_follow(next_location));
+            }
+        }
+        for(std::vector<next_loc_follow>::iterator it=next_loc.begin();it!=next_loc.end();it++){
+            for(int i = 0; i <8; i++){
+                int next_r=(it->next_loc-1)/8+1+next[i][0];
+                int next_c=(it->next_loc-1)%8+1+next[i][1];
+                if(If_Valid(next_r,next_c)){
+                    it->follow++;
+                }
+            }
+        }
+        sort(next_loc.begin(),next_loc.end(),sort_logic);
+       
+        for(std::vector<next_loc_follow>::iterator it=next_loc.begin();it!=next_loc.end();it++){
+                step++;
+                visit[it->next_loc]=1;
+                path.push_back(it->next_loc);
+                Travaling(it->next_loc);
+                if(step==64)return;
+                visit[it->next_loc]=0;
+                path.pop_back();
+                step--;
+        }
+    }
+
+}
+
+int main(){
+    int start_location;
+    std::cin>>start_location;
+
+    while(start_location != -1){
+        std::memset(visit,0,sizeof(visit));
+        path.clear();
+        path.push_back(start_location);
+        visit[start_location]=1;
+        step=1;
+        Travaling(start_location);
+        std::cin>>start_location;
+    }
+    return 0;
+}                                 
